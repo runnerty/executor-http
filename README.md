@@ -4,7 +4,7 @@
 ```json
 {
   "id": "shell_default",
-  "type": "runnerty-executor-http"
+  "type": "@runnerty/executor-http"
 }
 ```
 
