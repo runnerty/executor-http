@@ -23,8 +23,7 @@ class httpExecutor extends Execution {
       catch(err) {
         endOptions.end = "error";
         endOptions.messageLog = err;
-        endOptions.execute_err_return = err;
-        endOptions.execute_return = err;
+        endOptions.err_output = err;
         _this.end(endOptions);
       }
     }
@@ -33,13 +32,12 @@ class httpExecutor extends Execution {
       if (err) {
         endOptions.end = "error";
         endOptions.messageLog = err;
-        endOptions.execute_err_return = err;
-        endOptions.execute_return = err;
+        endOptions.err_output = err;
         _this.end(endOptions);
       }
 
       endOptions.end = "end";
-      endOptions.execute_return = body;
+      endOptions.data_output = body;
       _this.end(endOptions);
     });
 
