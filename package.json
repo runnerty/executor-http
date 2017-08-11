@@ -1,13 +1,13 @@
 {
   "name": "@runnerty/executor-http",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Runnerty module: HTTP executor",
   "author": "Coderty",
   "license": "MIT",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Coderty/runnerty-executor-http.git"
+    "url": "git+https://github.com/runnerty/executor-http.git"
   },
   "keywords": [
     "runnerty",
@@ -15,9 +15,9 @@
     "http"
   ],
   "bugs": {
-    "url": "https://github.com/Coderty/runnerty-executor-http/issues"
+    "url": "https://github.com/runnerty/executor-http/issues"
   },
-  "homepage": "https://github.com/Coderty/runnerty-executor-http#readme",
+  "homepage": "https://github.com/runnerty/executor-http#readme",
   "dependencies": {
     "request": "^2.81.0"
   }
