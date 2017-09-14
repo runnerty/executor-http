@@ -3,7 +3,7 @@
 ### Configuration sample:
 ```json
 {
-  "id": "shell_default",
+  "id": "http_default",
   "type": "@runnerty-executor-http"
 }
 ```
@@ -63,5 +63,18 @@
 }
 ```
 
+```json
+{
+  "id":"http_default",
+  "headers":{"User-Agent": "runnerty", "Content-Type": "application/xml"},
+  "method":"POST",
+  "uri":"https://sample.com/api-sample",
+  "auth": {
+    "user": ":MY_USER_AUTH",
+    "pass": ":MY_PASS_AUTH"
+  },
+  "body": ":SAMPLE_BODY"
+}
+```
 
 [Runnerty]: http://www.runnerty.io
