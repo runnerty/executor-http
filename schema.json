@@ -74,6 +74,9 @@
             }
           }
         },
+        "responseToFile": {
+          "type": "string"
+        },
         "gzip": {
           "type": "boolean"
         },

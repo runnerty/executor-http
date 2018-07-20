@@ -25,6 +25,16 @@
   "id":"http_default",
   "headers":{"User-Agent": "runnerty"},
   "method":"GET",
+  "uri":"https://raw.githubusercontent.com/runnerty/runnerty/master/README.md",
+  "responseToFile":"/etc/runnerty/runnerty_readme.md"
+}
+```
+
+```json
+{
+  "id":"http_default",
+  "headers":{"User-Agent": "runnerty"},
+  "method":"GET",
   "uri":"https://api.twitter.com/1.1/users/show.json",
   "oauth":
     { "consumer_key": "...",
@@ -70,10 +80,10 @@
   "method":"POST",
   "uri":"https://sample.com/api-sample",
   "auth": {
-    "user": ":MY_USER_AUTH",
-    "pass": ":MY_PASS_AUTH"
+    "user": "@GV(MY_USER_AUTH)",
+    "pass": "@GV(MY_PASS_AUTH)"
   },
-  "body": ":SAMPLE_BODY"
+  "body": "@GV(SAMPLE_BODY)"
 }
 ```
 

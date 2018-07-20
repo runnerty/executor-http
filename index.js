@@ -1,9 +1,9 @@
 "use strict";
 
-var http = require("request");
-var fs = require("fs");
+const http = require("request-promise-native");
+const fs = require("fs");
 
-var Execution = global.ExecutionClass;
+const Execution = global.ExecutionClass;
 
 class httpExecutor extends Execution {
   constructor(process) {
@@ -11,8 +11,8 @@ class httpExecutor extends Execution {
   }
 
   exec(values) {
-    var _this = this;
-    var endOptions = {end: "end"};
+    let _this = this;
+    let endOptions = {end: "end"};
 
     if(values.agentOptions) {
       try {
@@ -28,28 +28,54 @@ class httpExecutor extends Execution {
       }
     }
 
-    var req = http(values, function (err, response, body) {
-      if (err) {
+    if(values.files){
+      values.formData = {};
+      for (const file of values.files) {
+        values.formData[file.name] = {
+          value: fs.createReadStream(file.path),
+          options: {
+            filename: file.name
+          }
+        };
+      }
+    }
+
+    if(values.responseToFile){
+      values.encoding = values.encoding || "binary";
+    }
+
+    http(values)
+      .then(body => {
+        if(values.responseToFile){
+
+          let writeStream = fs.createWriteStream(values.responseToFile);
+          writeStream.write(body, "binary");
+          writeStream
+            .on("finish", () => {
+              endOptions.end = "end";
+              endOptions.data_output = body;
+              _this.end(endOptions);
+            })
+            .on("error", (err) => {
+              endOptions.end = "error";
+              endOptions.messageLog = err;
+              endOptions.err_output = err;
+              _this.end(endOptions);
+            });
+          writeStream.end();
+        }else{
+          endOptions.end = "end";
+          endOptions.data_output = body;
+          _this.end(endOptions);
+        }
+      })
+      .catch(err => {
         endOptions.end = "error";
         endOptions.messageLog = err;
         endOptions.err_output = err;
         _this.end(endOptions);
-      }
+      });
 
-      endOptions.end = "end";
-      endOptions.data_output = body;
-      _this.end(endOptions);
-    });
-
-    if(values.method === "POST" || values.method === "PUT"){
-      if(values.files){
-        var form = req.form();
-        let filesLength = values.files.length;
-        for(let i=0; i < filesLength; i++){
-          form.append(values.files[i].name, fs.createReadStream(values.files[i].path));
-        }
-      }
-    }
   }
 
 }
