@@ -4,10 +4,7 @@
   "definitions": {
     "config": {
       "type": "object",
-      "required": [
-        "id",
-        "type"
-      ],
+      "required": ["id", "type"],
       "properties": {
         "id": {
           "type": "string"
@@ -20,11 +17,7 @@
     },
     "params": {
       "type": "object",
-      "required": [
-        "id",
-        "method",
-        "uri"
-      ],
+      "required": ["id", "method", "uri"],
       "properties": {
         "id": {
           "type": "string"
@@ -51,19 +44,13 @@
           "type": "object"
         },
         "multipart": {
-          "type": [
-            "array",
-            "object"
-          ]
+          "type": ["array", "object"]
         },
         "files": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": [
-              "name",
-              "path"
-            ],
+            "required": ["name", "path"],
             "properties": {
               "name": {
                 "type": "string"
@@ -73,6 +60,9 @@
               }
             }
           }
+        },
+        "noReturnDataOutput": {
+          "type": "boolean"
         },
         "responseToFile": {
           "type": "string"

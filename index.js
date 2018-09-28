@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-const http = require("request-promise-native");
-const fs = require("fs");
+const http = require('request-promise-native');
+const fs = require('fs');
 
 const Execution = global.ExecutionClass;
 
@@ -12,23 +12,29 @@ class httpExecutor extends Execution {
 
   exec(values) {
     let _this = this;
-    let endOptions = {end: "end"};
+    let endOptions = { end: 'end' };
 
-    if(values.agentOptions) {
+    if (values.agentOptions) {
       try {
-        if (values.agentOptions.ca_file)   values.agentOptions.ca   = fs.readFileSync(values.agentOptions.ca_file);
-        if (values.agentOptions.cert_file) values.agentOptions.cert = fs.readFileSync(values.agentOptions.cert_file);
-        if (values.agentOptions.pfx_file)  values.agentOptions.pfx  = fs.readFileSync(values.agentOptions.pfx_file);
-      }
-      catch(err) {
-        endOptions.end = "error";
+        if (values.agentOptions.ca_file)
+          values.agentOptions.ca = fs.readFileSync(values.agentOptions.ca_file);
+        if (values.agentOptions.cert_file)
+          values.agentOptions.cert = fs.readFileSync(
+            values.agentOptions.cert_file
+          );
+        if (values.agentOptions.pfx_file)
+          values.agentOptions.pfx = fs.readFileSync(
+            values.agentOptions.pfx_file
+          );
+      } catch (err) {
+        endOptions.end = 'error';
         endOptions.messageLog = err;
         endOptions.err_output = err;
         _this.end(endOptions);
       }
     }
 
-    if(values.files){
+    if (values.files) {
       values.formData = {};
       for (const file of values.files) {
         values.formData[file.name] = {
@@ -40,44 +46,41 @@ class httpExecutor extends Execution {
       }
     }
 
-    if(values.responseToFile){
-      values.encoding = values.encoding || "binary";
+    if (values.responseToFile) {
+      values.encoding = values.encoding || 'binary';
     }
 
     http(values)
       .then(body => {
-        if(values.responseToFile){
-
+        if (values.responseToFile) {
           let writeStream = fs.createWriteStream(values.responseToFile);
-          writeStream.write(body, "binary");
+          writeStream.write(body, 'binary');
           writeStream
-            .on("finish", () => {
-              endOptions.end = "end";
-              endOptions.data_output = body;
+            .on('finish', () => {
+              endOptions.end = 'end';
+              endOptions.data_output = !values.noReturnDataOutput ? body : '';
               _this.end(endOptions);
             })
-            .on("error", (err) => {
-              endOptions.end = "error";
+            .on('error', err => {
+              endOptions.end = 'error';
               endOptions.messageLog = err;
               endOptions.err_output = err;
               _this.end(endOptions);
             });
           writeStream.end();
-        }else{
-          endOptions.end = "end";
-          endOptions.data_output = body;
+        } else {
+          endOptions.end = 'end';
+          endOptions.data_output = !values.noReturnDataOutput ? body : '';
           _this.end(endOptions);
         }
       })
       .catch(err => {
-        endOptions.end = "error";
+        endOptions.end = 'error';
         endOptions.messageLog = err;
         endOptions.err_output = err;
         _this.end(endOptions);
       });
-
   }
-
 }
 
 module.exports = httpExecutor;
