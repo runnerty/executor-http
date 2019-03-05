@@ -51,14 +51,21 @@ class httpExecutor extends Execution {
     }
 
     http(values)
-      .then(body => {
+      .then(response => {
+        if (response && values.json) {
+          endOptions.extra_output = {};
+          endOptions.extra_output = response;
+        }
+
         if (values.responseToFile) {
           let writeStream = fs.createWriteStream(values.responseToFile);
-          writeStream.write(body, 'binary');
+          writeStream.write(response, 'binary');
           writeStream
             .on('finish', () => {
               endOptions.end = 'end';
-              endOptions.data_output = !values.noReturnDataOutput ? body : '';
+              endOptions.data_output = !values.noReturnDataOutput
+                ? response
+                : '';
               _this.end(endOptions);
             })
             .on('error', err => {
@@ -70,7 +77,7 @@ class httpExecutor extends Execution {
           writeStream.end();
         } else {
           endOptions.end = 'end';
-          endOptions.data_output = !values.noReturnDataOutput ? body : '';
+          endOptions.data_output = !values.noReturnDataOutput ? response : '';
           _this.end(endOptions);
         }
       })
