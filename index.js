@@ -52,6 +52,10 @@ class httpExecutor extends Execution {
 
     http(values)
       .then(body => {
+        if (values.json) {
+          endOptions.extra_output = body;
+        }
+
         if (values.responseToFile) {
           let writeStream = fs.createWriteStream(values.responseToFile);
           writeStream.write(body, 'binary');
