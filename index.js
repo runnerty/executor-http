@@ -1,7 +1,7 @@
 'use strict';
 
-var http = require('request');
-var fs = require('fs');
+const http = require('request');
+const fs = require('fs');
 
 var Execution = global.ExecutionClass;
 
