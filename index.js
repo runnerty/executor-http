@@ -3,7 +3,7 @@
 const http = require('request');
 const fs = require('fs');
 
-var Execution = global.ExecutionClass;
+const Execution = global.ExecutionClass;
 
 class httpExecutor extends Execution {
   constructor(process) {
