@@ -26,7 +26,7 @@ class httpExecutor extends Execution {
       }
     }
 
-    var req = http(values, function (err, response, body) {
+    var req = http(values, (err, response, body) => {
       if (err) {
         endOptions.end = 'error';
         endOptions.messageLog = err;
