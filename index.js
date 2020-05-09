@@ -11,8 +11,7 @@ class httpExecutor extends Execution {
   }
 
   exec(values) {
-    var _this = this;
-    var endOptions = { end: 'end' };
+    let endOptions = { end: 'end' };
 
     if (values.agentOptions) {
       try {
@@ -23,7 +22,7 @@ class httpExecutor extends Execution {
         endOptions.end = 'error';
         endOptions.messageLog = err;
         endOptions.err_output = err;
-        _this.end(endOptions);
+        this.end(endOptions);
       }
     }
 
@@ -32,12 +31,12 @@ class httpExecutor extends Execution {
         endOptions.end = 'error';
         endOptions.messageLog = err;
         endOptions.err_output = err;
-        _this.end(endOptions);
+        this.end(endOptions);
       }
 
       endOptions.end = 'end';
       endOptions.data_output = body;
-      _this.end(endOptions);
+      this.end(endOptions);
     });
 
     if (values.method === 'POST' || values.method === 'PUT') {
