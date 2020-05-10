@@ -17,34 +17,204 @@
     },
     "params": {
       "type": "object",
-      "required": ["id", "method", "uri"],
+      "required": ["id", "method", "url"],
       "properties": {
         "id": {
           "type": "string"
         },
-        "method": {
+        "responseToFile": {
           "type": "string"
         },
-        "uri": {
+        "noReturnDataOutput": {
+          "type": "boolean"
+        },
+        "method": {
+          "type": "string",
+          "enum": ["get", "post", "delete", "put", "patch", "head", "options", "connect", "trace"]
+        },
+        "url": {
           "type": "string"
         },
         "headers": {
           "type": "object"
         },
-        "body": {
+        "params": {
+          "type": "object"
+        },
+        "paramsSerializerOptions": {
+          "type": "object",
+          "items": {
+            "indices": {
+              "type": "boolean"
+            },
+            "allowDots": {
+              "type": "boolean"
+            },
+            "addQueryPrefix": {
+              "type": "boolean"
+            },
+            "encode": {
+              "type": "boolean"
+            },
+            "encodeValuesOnly": {
+              "type": "boolean"
+            },
+            "strictNullHandling": {
+              "type": "boolean"
+            },
+            "skipNulls": {
+              "type": "boolean"
+            },
+            "charset": {
+              "type": "string"
+            },
+            "charsetSentinel": {
+              "type": "boolean"
+            },
+            "delimiter": {
+              "type": "string"
+            },
+            "arrayFormat": {
+              "type": "string",
+              "enum": ["indices", "brackets", "repeat", "comma", null]
+            }
+          }
+        },
+        "data": {
+          "type": ["string", "object"]
+        },
+        "timeout": {
+          "type": "number"
+        },
+        "withCredentials": {
+          "type": "boolean"
+        },
+        "auth": {
+          "type": "object",
+          "items": {
+            "username": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            }
+          }
+        },
+        "responseType": {
+          "type": "string",
+          "default": "json",
+          "enum": ["json", "arraybuffer", "document", "text", "stream", "blob"]
+        },
+        "responseEncoding": {
+          "type": "string",
+          "default": "utf8"
+        },
+        "xsrfCookieName": {
+          "type": "string",
+          "default": "XSRF-TOKEN"
+        },
+        "xsrfHeaderName": {
+          "type": "string",
+          "default": "X-XSRF-TOKEN"
+        },
+        "maxContentLength": {
+          "type": "number"
+        },
+        "maxBodyLength": {
+          "type": "number"
+        },
+        "maxRedirects": {
+          "type": "number",
+          "default": 5
+        },
+        "socketPath": {
           "type": "string"
         },
-        "form": {
-          "type": "object"
+        "httpAgent": {
+          "type": "object",
+          "items": {
+            "keepAlive": {
+              "type": "boolean"
+            },
+            "keepAliveMsecs": {
+              "type": "number"
+            },
+            "maxSockets": {
+              "type": "number"
+            },
+            "maxFreeSockets": {
+              "type": "number"
+            },
+            "timeout": {
+              "type": "number"
+            }
+          }
         },
-        "formData": {
-          "type": "object"
+        "httpsAgent": {
+          "type": "object",
+          "items": {
+            "keepAlive": {
+              "type": "boolean"
+            },
+            "maxCachedSessions": {
+              "type": "number"
+            },
+            "servername": {
+              "type": "string"
+            },
+            "passphrase": {
+              "type": "string"
+            },
+            "ca": {
+              "type": "string"
+            },
+            "cert": {
+              "type": "string"
+            },
+            "key": {
+              "type": "string"
+            },
+            "pfx": {
+              "type": "string"
+            },
+            "ca_file": {
+              "type": "string"
+            },
+            "cert_file": {
+              "type": "string"
+            },
+            "key_file": {
+              "type": "string"
+            },
+            "pfx_file": {
+              "type": "string"
+            }
+          }
         },
-        "qs": {
-          "type": "object"
+        "proxy": {
+          "type": "object",
+          "items": {
+            "host": {
+              "type": "string"
+            },
+            "port": {
+              "type": "number"
+            },
+            "auth": {
+              "type": "object",
+              "items": {
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
         },
-        "multipart": {
-          "type": ["array", "object"]
+        "decompress": {
+          "type": "boolean"
         },
         "files": {
           "type": "array",
@@ -58,99 +228,6 @@
               "path": {
                 "type": "string"
               }
-            }
-          }
-        },
-        "noReturnDataOutput": {
-          "type": "boolean"
-        },
-        "responseToFile": {
-          "type": "string"
-        },
-        "gzip": {
-          "type": "boolean"
-        },
-        "json": {
-          "type": "boolean"
-        },
-        "jar": {
-          "type": "boolean"
-        },
-        "timeout": {
-          "type": "number"
-        },
-        "auth": {
-          "type": "object",
-          "items": {
-            "username": {
-              "type": "string"
-            },
-            "pass": {
-              "type": "string"
-            },
-            "sendImmediately": {
-              "type": "boolean"
-            },
-            "bearer": {
-              "type": "string"
-            }
-          }
-        },
-        "agentOptions": {
-          "type": "object",
-          "items": {
-            "ca": {
-              "type": "string"
-            },
-            "cert": {
-              "type": "string"
-            },
-            "pfx": {
-              "type": "string"
-            },
-            "ca_file": {
-              "type": "string"
-            },
-            "cert_file": {
-              "type": "string"
-            },
-            "pfx_file": {
-              "type": "string"
-            },
-            "secureProtocol": {
-              "type": "string"
-            },
-            "key": {
-              "type": "string"
-            },
-            "passphrase": {
-              "type": "string"
-            },
-            "socksHost": {
-              "type": "string"
-            },
-            "socksPort": {
-              "type": "number"
-            }
-          }
-        },
-        "oauth": {
-          "type": "object",
-          "items": {
-            "consumer_key": {
-              "type": "string"
-            },
-            "consumer_secret": {
-              "type": "string"
-            },
-            "token": {
-              "type": "string"
-            },
-            "token_secret": {
-              "type": "string"
-            },
-            "verifier": {
-              "type": "string"
             }
           }
         }
