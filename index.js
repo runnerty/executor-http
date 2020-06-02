@@ -78,14 +78,15 @@ class httpExecutor extends Execution {
     // RESPONSE TO FILE
     if (values.responseToFile) {
       values.responseEncoding = values.responseEncoding || 'binary';
+      values.responseType = 'stream';
     }
 
     axios(values)
       .then(response => {
         endOptions.end = 'end';
         if (values.responseToFile) {
-          const writeStream = fs.createWriteStream(values.responseToFile);
-          writeStream.write(response, 'binary');
+         const writeStream = fs.createWriteStream(values.responseToFile);
+         response.data.pipe(writeStream);
           writeStream
             .on('finish', () => {
               if (!values.noReturnDataOutput) {
@@ -95,15 +96,16 @@ class httpExecutor extends Execution {
                 }
               }
               endOptions.end = 'end';
+              writeStream.end();
               this.end(endOptions);
             })
             .on('error', err => {
-              endOptions.messageLog = err;
-              endOptions.err_output = err;
+              endOptions.messageLog = err.message;
+              endOptions.err_output = err.message;
               endOptions.end = 'error';
+              writeStream.end();
               this.end(endOptions);
             });
-          writeStream.end();
         } else {
           if (!values.noReturnDataOutput) {
             endOptions.data_output = response.data;
@@ -117,8 +119,8 @@ class httpExecutor extends Execution {
       })
       .catch(err => {
         endOptions.end = 'error';
-        endOptions.messageLog = err;
-        endOptions.err_output = err;
+        endOptions.messageLog = err.message;
+        endOptions.err_output = err.message;
         this.end(endOptions);
       });
   }
