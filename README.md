@@ -77,7 +77,7 @@
 ### Output (Process values):
 * `PROCESS_EXEC_DATA_OUTPUT`: Response output data.
 It is possible to return the header response in dataoutput by activating the `returnHeaderDataOutput (boolean)` parameter
-* `EXTRA_DATA`: If the answer is a `JSON` it is possible to work with the parsed values of the answer using the `"responseType": "json"` parameter. If we receive for example:
+* `EXTRA_DATA`: If the response is a `JSON` it is possible to work with the parsed values of the response using the `"responseType": "json"` parameter. If we receive for example:
 ```json
 {
   "planet": {
