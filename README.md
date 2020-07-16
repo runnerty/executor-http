@@ -42,7 +42,8 @@
     "key1": "value1",
     "key2": "value2"
   },
-  "responseType": "json"
+  "responseType": "json",
+  "withCredentials": true
 }
 ```
 
@@ -54,7 +55,8 @@
   "method": "post",
   "files":[{"name":"fileOne", "path":"/var/myfile.txt"},
            {"name":"fileTwo", "path":"/var/www/runnerty.jpg"}],
-  "responseType": "json"
+  "responseType": "json",
+  "returnHeaderDataOutput": true
 }
 ```
 
@@ -74,6 +76,26 @@
 
 ### Output (Process values):
 * `PROCESS_EXEC_DATA_OUTPUT`: Response output data.
+It is possible to return the header response in dataoutput by activating the `returnHeaderDataOutput (boolean)` parameter
+* `EXTRA_DATA`: If the answer is a `JSON` it is possible to work with the parsed values of the answer using the `"responseType": "json"` parameter. If we receive for example:
+```json
+{
+  "planet": {
+    "name": "Mars",
+    "satellites": [
+      {
+        "name": "phobos"
+      },
+      {
+        "name": "deimos"
+      }
+    ]
+  }
+}
+```
+It is possible to access the values by ([GETVALUE] function):
+`PROCESS_EXEC_PLANET_NAME`: "Mars", `PROCESS_EXEC_PLANET_NAME_SATELLITES_1_NAME`:"phobos"
+
 * `PROCESS_EXEC_ERR_OUTPUT`: Error output message.
 
 ### Other considerations
@@ -97,3 +119,4 @@ If the result is very large, you should consider using the "noReturnDataOutput" 
 [npm-image]: https://img.shields.io/npm/v/@runnerty/executor-http.svg
 [david-badge]: https://david-dm.org/runnerty/executor-http.svg
 [david-badge-url]: https://david-dm.org/runnerty/executor-http
+[GETVALUE]: http://docs.runnerty.io/functions/

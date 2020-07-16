@@ -32,7 +32,8 @@ class httpExecutor extends Execution {
           cert: httpsAgentParams.cert,
           key: httpsAgentParams.key,
           pfx: httpsAgentParams.pfx,
-          maxCachedSessions: httpsAgentParams.maxCachedSessions
+          maxCachedSessions: httpsAgentParams.maxCachedSessions,
+          withCredentials: httpsAgentParams.withCredentials
         };
         values.httpsAgent = new https.Agent(httpsAgentOptions);
       } catch (err) {
@@ -85,14 +86,16 @@ class httpExecutor extends Execution {
       .then(response => {
         endOptions.end = 'end';
         if (values.responseToFile) {
-         const writeStream = fs.createWriteStream(values.responseToFile);
-         response.data.pipe(writeStream);
+          const writeStream = fs.createWriteStream(values.responseToFile);
+          response.data.pipe(writeStream);
           writeStream
             .on('finish', () => {
               if (!values.noReturnDataOutput) {
                 endOptions.data_output = response.data;
+                if (values.returnHeaderDataOutput) endOptions.data_output.headers = response.headers;
                 if (values.responseType === 'json') {
                   endOptions.extra_output = response.data;
+                  if (values.returnHeaderDataOutput) endOptions.extra_output.headers = response.headers;
                 }
               }
               endOptions.end = 'end';
@@ -111,6 +114,7 @@ class httpExecutor extends Execution {
             endOptions.data_output = response.data;
             if (values.responseType === 'json') {
               endOptions.extra_output = response.data;
+              if (values.returnHeaderDataOutput) endOptions.extra_output.headers = response.headers;
             }
           }
           endOptions.end = 'end';
