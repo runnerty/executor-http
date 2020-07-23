@@ -74,6 +74,86 @@
 }
 ```
 
+### Pagination:
+It is possible to make calls to APIs that return 'JSON' data that requires paging.
+The parameters available for paging are:
+```
+start                           - page from which the query is initiated, by default 1
+limit                           - maximum elements per page
+pages                           - total of page to consular
+total                           - total items for automatic page calculation
+total_from_header               - header from which to get the total of items for automatic page calculation
+total_from_response             - params path of the response data from which to get the total of items for automatic page calculation
+next_page_url_from_response     - params path of the response data from which to get the url for the next page
+token.query_param_name          - name of parameter to send in url query with token of next page
+token.data_param_name           - name of the parameter to be sent in the body with the token of next page
+token.next_token_from_response  - params path of the response data from which to get the next page token
+token.next_token_from_header    - params path of the header data from which to get the next page token
+```
+Some paginations examples:
+```json
+{
+  "id": "http_default",
+  "method": "get",
+  "url": "https://endpoint.sample.com/items",
+  "pagination": {
+    "limit": "2000",
+    "total_from_header": "x-total-items"
+  },
+  "responseType": "json",
+  "responseToFile": "/var/www/data/sample.json",
+  "noReturnDataOutput": true
+}
+```
+```json
+{
+  "id": "http_default",
+  "method": "get",
+  "url": "https://endpoint.sample.com/items",
+  "pagination": {
+    "limit": "2000",
+    "next_page_url_from_response": "paging.nextPage"
+  },
+  "responseType": "json",
+  "responseToFile": "/var/www/data/sample.json",
+  "noReturnDataOutput": true
+}
+```
+```json
+{
+  "id": "http_default",
+  "method": "get",
+  "url": "https://endpoint.sample.com/items",
+  "pagination": {
+    "limit": "2000",
+    "token": {
+      "next_token_from_response": "paging.continuationToken",
+      "query_param_name": "nextPageToken"
+    }
+  },
+  "responseType": "json",
+  "responseToFile": "/var/www/data/sample.json",
+  "noReturnDataOutput": true
+}
+```
+```json
+{
+  "id": "http_default",
+  "method": "get",
+  "url": "https://endpoint.sample.com/items",
+  "pagination": {
+    "limit": "2000",
+    "token": {
+      "next_token_from_response": "paging.continuationToken",
+      "query_param_name": "nextPageToken"
+    }
+  },
+  "responseType": "json",
+  "responseToFile": "/var/www/data/sample.json",
+  "noReturnDataOutput": true
+}
+```
+
 ### Output (Process values):
 * `PROCESS_EXEC_DATA_OUTPUT`: Response output data.
 It is possible to return the header response in dataoutput by activating the `returnHeaderDataOutput (boolean)` parameter

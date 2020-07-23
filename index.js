@@ -11,10 +11,35 @@ const Execution = global.ExecutionClass;
 class httpExecutor extends Execution {
   constructor(process) {
     super(process);
+    this.pagination;
+    this.dataResponse;
+    this.values;
+    this.endOptions = { end: 'end' };
   }
 
-  exec(values) {
-    let endOptions = { end: 'end' };
+  async exec(values) {
+    this.values = values;
+    const httpParams = {
+      url: values.url,
+      method: values.method,
+      headers: values.headers,
+      params: values.params || {},
+      data: values.data,
+      timeout: values.timeout,
+      withCredentials: values.withCredentials,
+      auth: values.auth,
+      responseType: values.responseType,
+      responseEncoding: values.responseEncoding,
+      xsrfCookieName: values.xsrfCookieName,
+      xsrfHeaderName: values.xsrfHeaderName,
+      maxContentLength: values.maxContentLength,
+      maxBodyLength: values.maxBodyLength,
+      maxRedirects: values.maxRedirects,
+      socketPath: values.socketPath,
+      proxy: values.proxy,
+      decompress: values.decompress,
+      files: values.files
+    };
 
     // HTTPS-Agent
     if (values.httpsAgent) {
@@ -35,24 +60,24 @@ class httpExecutor extends Execution {
           maxCachedSessions: httpsAgentParams.maxCachedSessions,
           withCredentials: httpsAgentParams.withCredentials
         };
-        values.httpsAgent = new https.Agent(httpsAgentOptions);
+        httpParams.httpsAgent = new https.Agent(httpsAgentOptions);
       } catch (err) {
-        endOptions.end = 'error';
-        endOptions.messageLog = err;
-        endOptions.err_output = err;
-        this.end(endOptions);
+        this.endOptions.end = 'error';
+        this.endOptions.messageLog = err;
+        this.endOptions.err_output = err;
+        this.end(this.endOptions);
       }
     }
 
     // HTTP-Agent
     if (values.httpAgent) {
       try {
-        values.httpAgent = new http.Agent(values.httpAgent);
+        httpParams.httpAgent = new http.Agent(values.httpAgent);
       } catch (err) {
-        endOptions.end = 'error';
-        endOptions.messageLog = err;
-        endOptions.err_output = err;
-        this.end(endOptions);
+        this.endOptions.end = 'error';
+        this.endOptions.messageLog = err;
+        this.endOptions.err_output = err;
+        this.end(this.endOptions);
       }
     }
 
@@ -63,70 +88,203 @@ class httpExecutor extends Execution {
       for (let i = 0; i < filesLength; i++) {
         form.append(values.files[i].name, fs.createReadStream(values.files[i].path));
       }
-      values.data = form;
+      httpParams.data = form;
       const formHeaders = form.getHeaders();
-      values.headers = { ...formHeaders, ...values.headers };
+      httpParams.headers = { ...formHeaders, ...values.headers };
     }
 
     // PARAMS-SERIALIZER
     if (values.paramsSerializerOptions) {
       const paramsSerializerOptions = values.paramsSerializerOptions;
-      values.paramsSerializer = params => {
+      httpParams.paramsSerializer = params => {
         return qs.stringify(params, paramsSerializerOptions);
       };
     }
 
     // RESPONSE TO FILE
-    if (values.responseToFile) {
-      values.responseEncoding = values.responseEncoding || 'binary';
-      values.responseType = 'stream';
+    if (values.responseToFile && !values.pagination) {
+      httpParams.responseEncoding = values.responseEncoding || 'binary';
+      httpParams.responseType = 'stream';
     }
 
-    axios(values)
-      .then(response => {
-        endOptions.end = 'end';
-        if (values.responseToFile) {
-          const writeStream = fs.createWriteStream(values.responseToFile);
-          response.data.pipe(writeStream);
+    // PAGINATION
+    if (values.pagination) {
+      // Initial page:
+      httpParams.params.page = values.pagination.start || 1;
+      // Limit items per page:
+      if (values.pagination.limit) httpParams.params.limit = values.pagination.limit;
+      this.pagination.pages = values.pagination.pages || 1;
+      // If the total is indicated, the number of pages is calculated automatically:
+      if (values.pagination.total) {
+        this.pagination.total = values.pagination.total;
+        if (values.pagination.limit && values.pagination.limit > 0) {
+          this.pagination.pages = Math.ceil(this.pagination.total / values.pagination.limit);
+        }
+      }
+      let latest = true;
+      for (httpParams.params.page; httpParams.params.page <= this.pagination.pages; httpParams.params.page++) {
+        latest = httpParams.params.page >= this.pagination.pages;
+        await this.runHTTPAction(httpParams, latest);
+      }
+    } else {
+      const latest = true;
+      await this.runHTTPAction(httpParams, latest);
+    }
+  }
+
+  getObjectValueFromPath(object, path) {
+    try {
+      return path.split('.').reduce((o, i) => o[i], object);
+    } catch (error) {
+      return undefined;
+    }
+  }
+
+  async runHTTPAction(values, latest) {
+    try {
+      // HTTP call:
+      const response = await axios(values);
+
+      // Pagination:
+      if (this.values.pagination) {
+        if (!this.values.pagination.limit) this.values.pagination.limit = 100;
+
+        // Total items from response:
+        if (this.values.pagination.total_from_response) {
+          const pages = Math.ceil(
+            this.getObjectValueFromPath(response.data, this.values.pagination.total_from_response) ||
+              1 / this.values.pagination.limit
+          );
+          if (this.pagination.pages < pages) {
+            this.pagination.pages = pages;
+            latest = false;
+          }
+        }
+
+        // Total items from header:
+        if (this.values.pagination.total_from_header) {
+          const pages = Math.ceil(
+            response.headers[this.values.pagination.total_from_header] / this.values.pagination.limit
+          );
+          if (this.pagination.pages < pages) {
+            this.pagination.pages = pages;
+            latest = false;
+          }
+        }
+
+        // Next page URL from response:
+        if (this.values.pagination.next_page_url_from_response) {
+          values.url = this.getObjectValueFromPath(response.data, this.values.pagination.next_page_url_from_response);
+          if (!values.url) latest = true;
+        }
+
+        // Next token:
+        if (
+          (this.values.pagination.token.query_param_name || this.values.pagination.token.data_param_name) &&
+          (this.values.pagination.token.next_token_from_response || this.values.pagination.token.next_token_from_header)
+        ) {
+          let token = '';
+          if (this.values.pagination.token.next_token_from_response)
+            token = this.getObjectValueFromPath(response.data, this.values.pagination.token.next_token_from_response);
+
+          if (this.values.pagination.token.next_token_from_header)
+            token = this.getObjectValueFromPath(response.headers, this.values.pagination.token.next_token_from_header);
+
+          if (this.values.pagination.token.data_param_name)
+            values.data[this.values.pagination.token.query_param_name] = token;
+
+          if (this.values.pagination.token.query_param_name)
+            values.params[this.values.pagination.token.query_param_name] = token;
+        }
+
+        if (this.dataResponse) {
+          this.dataResponse.data.concat(response.data);
+        } else {
+          this.dataResponse = response;
+        }
+      } else {
+        this.dataResponse = response;
+      }
+
+      if (latest) {
+        if (this.values.responseToFile) {
+          const streamWrite = values.responseType === 'stream';
+          await this.writeResponseToFile(this.dataResponse, streamWrite);
+        } else {
+          this.writeResponseToDataOutput(this.dataResponse);
+        }
+      }
+    } catch (err) {
+      this.endOptions.end = 'error';
+      this.endOptions.messageLog = err.message;
+      this.endOptions.err_output = err.message;
+      this.end(this.endOptions);
+    }
+  }
+
+  writeResponseToFile(dataResponse, streamWrite) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (streamWrite) {
+          const writeStream = fs.createWriteStream(this.values.responseToFile);
+          dataResponse.data.pipe(writeStream);
           writeStream
             .on('finish', () => {
-              if (!values.noReturnDataOutput) {
-                endOptions.data_output = response.data;
-                if (values.returnHeaderDataOutput) endOptions.data_output.headers = response.headers;
-                if (values.responseType === 'json') {
-                  endOptions.extra_output = response.data;
-                  if (values.returnHeaderDataOutput) endOptions.extra_output.headers = response.headers;
-                }
-              }
-              endOptions.end = 'end';
               writeStream.end();
-              this.end(endOptions);
+              this.writeResponseToFileFinish(dataResponse);
+              resolve();
             })
             .on('error', err => {
-              endOptions.messageLog = err.message;
-              endOptions.err_output = err.message;
-              endOptions.end = 'error';
-              writeStream.end();
-              this.end(endOptions);
+              throw err;
             });
         } else {
-          if (!values.noReturnDataOutput) {
-            endOptions.data_output = response.data;
-            if (values.responseType === 'json') {
-              endOptions.extra_output = response.data;
-              if (values.returnHeaderDataOutput) endOptions.extra_output.headers = response.headers;
-            }
+          if (this.values.responseType === 'json') {
+            await fs.promises.writeFile(this.values.responseToFile, JSON.stringify(dataResponse.data));
+          } else {
+            await fs.promises.writeFile(this.values.responseToFile, dataResponse.data);
           }
-          endOptions.end = 'end';
-          this.end(endOptions);
+          this.writeResponseToFileFinish(dataResponse);
+          resolve();
         }
-      })
-      .catch(err => {
-        endOptions.end = 'error';
-        endOptions.messageLog = err.message;
-        endOptions.err_output = err.message;
-        this.end(endOptions);
-      });
+      } catch (err) {
+        this.endOptions.messageLog = err.message;
+        this.endOptions.err_output = err.message;
+        this.endOptions.end = 'error';
+        writeStream.end();
+        this.end(this.endOptions);
+        resolve();
+      }
+    });
+  }
+
+  writeResponseToFileFinish(dataResponse) {
+    if (!this.values.noReturnDataOutput) {
+      this.endOptions.data_output = dataResponse.data;
+      if (this.values.returnHeaderDataOutput) this.endOptions.data_output.headers = dataResponse.headers;
+      if (this.values.responseType === 'json') {
+        this.endOptions.extra_output = dataResponse.data;
+        if (this.values.returnHeaderDataOutput) this.endOptions.extra_output.headers = dataResponse.headers;
+      }
+    }
+    this.endOptions.end = 'end';
+    this.end(this.endOptions);
+  }
+
+  writeResponseToDataOutput(dataResponse) {
+    if (!this.values.noReturnDataOutput) {
+      this.endOptions.data_output = dataResponse.data;
+      if (this.values.responseType === 'json') {
+        if (this.endOptions.extra_output) {
+          this.endOptions.extra_output = dataResponse.data;
+        } else {
+          this.endOptions.extra_output = dataResponse.data;
+        }
+
+        if (this.values.returnHeaderDataOutput) this.endOptions.extra_output.headers = dataResponse.headers;
+      }
+    }
+    this.endOptions.end = 'end';
+    this.end(this.endOptions);
   }
 }
 

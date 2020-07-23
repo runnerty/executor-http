@@ -230,6 +230,41 @@
               }
             }
           }
+        },
+        "pagination": {
+          "type": "object",
+          "items": {
+            "start": {
+              "type": "number"
+            },
+            "limit": {
+              "type": "number"
+            },
+            "pages": {
+              "type": "number"
+            },
+            "total": {
+              "type": "number"
+            },
+            "total_from_header": {
+              "type": "string"
+            },
+            "total_from_response": {
+              "type": "string"
+            },
+            "next_page_url_from_response": {
+              "type": "string"
+            },
+            "token": {
+              "type": "object",
+              "items": {
+                "query_param_name": { "type": "string" },
+                "data_param_name": { "type": "string" },
+                "next_token_from_response": { "type": "string" },
+                "next_token_from_header": { "type": "string" }
+              }
+            }
+          }
         }
       }
     }

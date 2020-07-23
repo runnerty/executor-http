@@ -3,6 +3,7 @@ node_modules
 .eslintignore
 .gitignore
 .prettierignore
+.DS_Store
 LICENSE
 *.png
 *.txt
