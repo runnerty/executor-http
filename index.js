@@ -180,6 +180,7 @@ class httpExecutor extends Execution {
 
         // Next token:
         if (
+          this.values.pagination.token &&
           (this.values.pagination.token.query_param_name || this.values.pagination.token.data_param_name) &&
           (this.values.pagination.token.next_token_from_response || this.values.pagination.token.next_token_from_header)
         ) {
