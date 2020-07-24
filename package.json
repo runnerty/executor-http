@@ -1,6 +1,6 @@
 {
   "name": "@runnerty/executor-http",
-  "version": "2.2.0-rc1",
+  "version": "2.2.0",
   "description": "Runnerty module: HTTP executor",
   "author": "Coderty",
   "license": "MIT",

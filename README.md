@@ -12,7 +12,14 @@
 
 # Executor for [Runnerty]: HTTP
 
+### Installation:
+```bash
+npm i @runnerty/executor-http
+```
+
+
 ### Configuration sample:
+Add in [config.json]:
 ```json
 {
   "id": "http_default",
@@ -21,6 +28,7 @@
 ```
 
 ### Plan sample:
+Add in [plan.json]:
 ```json
 {
   "id": "http_default",
@@ -80,7 +88,7 @@ The parameters available for paging are:
 ```
 start                           - page from which the query is initiated, by default 1
 limit                           - maximum elements per page
-pages                           - total of page to consular
+pages                           - total pages to consult
 total                           - total items for automatic page calculation
 total_from_header               - header from which to get the total of items for automatic page calculation
 total_from_response             - params path of the response data from which to get the total of items for automatic page calculation
@@ -113,23 +121,6 @@ Some paginations examples:
   "pagination": {
     "limit": "2000",
     "next_page_url_from_response": "paging.nextPage"
-  },
-  "responseType": "json",
-  "responseToFile": "/var/www/data/sample.json",
-  "noReturnDataOutput": true
-}
-```
-```json
-{
-  "id": "http_default",
-  "method": "get",
-  "url": "https://endpoint.sample.com/items",
-  "pagination": {
-    "limit": "2000",
-    "token": {
-      "next_token_from_response": "paging.continuationToken",
-      "query_param_name": "nextPageToken"
-    }
   },
   "responseType": "json",
   "responseToFile": "/var/www/data/sample.json",
@@ -200,3 +191,5 @@ If the result is very large, you should consider using the "noReturnDataOutput" 
 [david-badge]: https://david-dm.org/runnerty/executor-http.svg
 [david-badge-url]: https://david-dm.org/runnerty/executor-http
 [GETVALUE]: http://docs.runnerty.io/functions/
+[config.json]: http://docs.runnerty.io/config/
+[plan.json]: http://docs.runnerty.io/plan/
