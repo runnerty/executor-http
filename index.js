@@ -6,9 +6,9 @@ const formData = require('form-data');
 const qs = require('qs');
 const fs = require('fs');
 
-const Execution = global.ExecutionClass;
+const Executor = require('@runnerty/module-core').Executor;
 
-class httpExecutor extends Execution {
+class httpExecutor extends Executor {
   constructor(process) {
     super(process);
     this.pagination;

@@ -5,13 +5,13 @@
   <p align="center">Smart Processes Management</p>
 </p>
 
-[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Dependency Status][david-badge]][david-badge-url] 
+[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Dependency Status][david-badge]][david-badge-url]
 <a href="#badge">
   <img alt="code style: prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg">
 </a>
 
 # Executor for [Runnerty]: HTTP
-  
+
 ### Installation:
 ```bash
 npm i @runnerty/executor-http
@@ -83,7 +83,7 @@ Add in [plan.json]:
 ```
 
 ### Pagination:
-It is possible to make calls to APIs that return 'JSON' data that requires paging.
+It is possible to make calls to APIs that return `JSON` data that requires paging.
 The parameters available for paging are:
 ```
 start                           - page from which the query is initiated, by default 1
