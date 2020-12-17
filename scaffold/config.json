@@ -1,0 +1,8 @@
+{
+  "executors": [
+    {
+      "id": "http_default",
+      "type": "@runnerty-executor-http"
+    }
+  ]
+}
