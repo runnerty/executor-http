@@ -5,18 +5,33 @@
   <p align="center">Smart Processes Management</p>
 </p>
 
-[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Dependency Status][david-badge]][david-badge-url] 
+[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Dependency Status][david-badge]][david-badge-url]
 <a href="#badge">
   <img alt="code style: prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg">
 </a>
 
 # Executor for [Runnerty]: HTTP
-  
+
 ### Installation:
+Through NPM
+
 ```bash
 npm i @runnerty/executor-http
 ```
 
+You can also add modules to your project with [runnerty-cli]
+
+```bash
+npx runnerty-cli add @runnerty/executor-http
+```
+
+This command installs the module in your project, adds example configuration in your `config.json` and creates an example plan of use.
+
+If you have installed [runnerty-cli] globally you can include the module with this command:
+
+```bash
+rty add @runnerty/executor-http
+```
 
 ### Configuration sample:
 Add in [config.json]:
@@ -83,7 +98,7 @@ Add in [plan.json]:
 ```
 
 ### Pagination:
-It is possible to make calls to APIs that return 'JSON' data that requires paging.
+It is possible to make calls to APIs that return `JSON` data that requires paging.
 The parameters available for paging are:
 ```
 start                           - page from which the query is initiated, by default 1
@@ -193,3 +208,4 @@ If the result is very large, you should consider using the "noReturnDataOutput" 
 [GETVALUE]: http://docs.runnerty.io/functions/
 [config.json]: http://docs.runnerty.io/config/
 [plan.json]: http://docs.runnerty.io/plan/
+[runnerty-cli]: https://www.npmjs.com/package/runnerty-cli

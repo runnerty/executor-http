@@ -1,0 +1,61 @@
+{
+  "$schema": "https://raw.githubusercontent.com/runnerty/schemas/master/schemas/3.0/plan.json",
+  "chains": [
+    {
+      "id": "CHAIN_HTTP_SAMPLES",
+      "name": "HTTP module example chain",
+      "defaults_processes": {
+        "notifications": {
+          "on_start": [
+            {
+              "id": "console_default",
+              "message": "@GETDATE('YYYY-MM-DD HH:mm:ss') START: PROCESS @GV(PROCESS_ID)"
+            }
+          ],
+          "on_fail": [
+            {
+              "id": "console_default",
+              "message": "@GETDATE('YYYY-MM-DD HH:mm:ss') ERROR: PROCESS @GV(PROCESS_ID): @GV(PROCESS_EXEC_ERR_OUTPUT)",
+              "mode": "error"
+            }
+          ],
+          "on_end": [
+            {
+              "id": "console_default",
+              "message": "@GETDATE('YYYY-MM-DD HH:mm:ss') END: PROCESS @GV(PROCESS_ID)"
+            }
+          ]
+        }
+      },
+      "processes": [
+        {
+          "id": "HTTP_GET_SIMPLE",
+          "name": "HTTP GET JSON SAMPLE",
+          "exec": {
+            "id": "http_default",
+            "headers": { "User-Agent": "runnerty" },
+            "method": "get",
+            "url": "https://api.github.com/search/repositories",
+            "params": { "q": "runnerty" },
+            "responseType": "json"
+          }
+        },
+        {
+          "id": "HTTP_POST_HEADERS_SIMPLE",
+          "name": "HTTP POST HEADERS SAMPLE",
+          "exec": {
+            "id": "http_default",
+            "headers": { "User-Agent": "runnerty", "Content-Type": "application/xml" },
+            "method": "post",
+            "url": "https://sample.com/api-sample",
+            "auth": {
+              "user": "@GV(MY_USER_AUTH)",
+              "pass": "@GV(MY_PASS_AUTH)"
+            },
+            "data": "@GV(SAMPLE_BODY)"
+          }
+        }
+      ]
+    }
+  ]
+}
