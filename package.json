@@ -1,6 +1,6 @@
 {
   "name": "@runnerty/executor-http",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Runnerty module: HTTP executor",
   "author": "Runnerty Tech",
   "license": "MIT",
@@ -23,14 +23,14 @@
   },
   "homepage": "https://github.com/runnerty/executor-http#readme",
   "dependencies": {
-    "@runnerty/module-core": "3.0.1",
-    "axios": "0.21.1",
-    "form-data": "3.0.0",
-    "qs": "6.9.4"
+    "@runnerty/module-core": "~3.0.3",
+    "axios": "~0.21.1",
+    "form-data": "~3.0.0",
+    "qs": "~6.9.6"
   },
   "devDependencies": {
-    "eslint": "^7.17.0",
-    "eslint-config-prettier": "^7.1.0",
+    "eslint": "^7.19.0",
+    "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-prettier": "^3.3.1",
     "prettier": "^2.2.1"
   }

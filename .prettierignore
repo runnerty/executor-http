@@ -8,6 +8,4 @@ LICENSE
 *.png
 *.txt
 TODO
-docs/functions.md
 *.md
-test.log
