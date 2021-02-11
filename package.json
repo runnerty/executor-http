@@ -1,6 +1,6 @@
 {
   "name": "@runnerty/executor-http",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Runnerty module: HTTP executor",
   "author": "Runnerty Tech",
   "license": "MIT",
@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/runnerty/executor-http#readme",
   "dependencies": {
-    "@runnerty/module-core": "~3.0.3",
+    "@runnerty/module-core": "~3.0.4",
     "axios": "~0.21.1",
     "form-data": "~3.0.0",
     "qs": "~6.9.6"
