@@ -84,7 +84,7 @@ class httpExecutor extends Executor {
     // FILES FORM
     if (values.files && (values.method === 'post' || values.method === 'put')) {
       const form = new formData();
-      let filesLength = values.files.length;
+      const filesLength = values.files.length;
       for (let i = 0; i < filesLength; i++) {
         form.append(values.files[i].name, fs.createReadStream(values.files[i].path));
       }
@@ -236,6 +236,7 @@ class httpExecutor extends Executor {
               resolve();
             })
             .on('error', err => {
+              writeStream.end();
               throw err;
             });
         } else {
@@ -251,7 +252,6 @@ class httpExecutor extends Executor {
         this.endOptions.messageLog = err.message;
         this.endOptions.err_output = err.message;
         this.endOptions.end = 'error';
-        writeStream.end();
         this.end(this.endOptions);
         resolve();
       }
