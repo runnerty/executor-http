@@ -49,8 +49,8 @@
             "method": "post",
             "url": "https://sample.com/api-sample",
             "auth": {
-              "user": "@GV(MY_USER_AUTH)",
-              "pass": "@GV(MY_PASS_AUTH)"
+              "username": "@GV(MY_USER_AUTH)",
+              "password": "@GV(MY_PASS_AUTH)"
             },
             "data": "@GV(SAMPLE_BODY)"
           }
