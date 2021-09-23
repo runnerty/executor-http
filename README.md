@@ -20,18 +20,18 @@ Through NPM
 npm i @runnerty/executor-http
 ```
 
-You can also add modules to your project with [runnerty-cli]
+You can also add modules to your project with [runnerty]
 
 ```bash
-npx runnerty-cli add @runnerty/executor-http
+npx runnerty add @runnerty/executor-http
 ```
 
-This command installs the module in your project, adds example configuration in your `config.json` and creates an example plan of use.
+This command installs the module in your project, adds example configuration in your [config.json] and creates an example plan of use.
 
-If you have installed [runnerty-cli] globally you can include the module with this command:
+If you have installed [runnerty] globally you can include the module with this command:
 
 ```bash
-rty add @runnerty/executor-http
+runnerty add @runnerty/executor-http
 ```
 
 ### Configuration sample:
@@ -214,7 +214,7 @@ If the result is very large, you should consider using the "noReturnDataOutput" 
 }
 ```
 
-[runnerty]: http://www.runnerty.io
+[runnerty]: https://www.runnerty.io
 [downloads-image]: https://img.shields.io/npm/dm/@runnerty/executor-http.svg
 [npm-url]: https://www.npmjs.com/package/@runnerty/executor-http
 [npm-image]: https://img.shields.io/npm/v/@runnerty/executor-http.svg
@@ -223,4 +223,3 @@ If the result is very large, you should consider using the "noReturnDataOutput" 
 [getvalue]: http://docs.runnerty.io/functions/
 [config.json]: http://docs.runnerty.io/config/
 [plan.json]: http://docs.runnerty.io/plan/
-[runnerty-cli]: https://www.npmjs.com/package/runnerty-cli
