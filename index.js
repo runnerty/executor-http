@@ -44,22 +44,12 @@ class httpExecutor extends Executor {
     // HTTPS-Agent
     if (values.httpsAgent) {
       try {
-        const httpsAgentParams = values.httpsAgent;
-        if (httpsAgentParams.key_file) httpsAgentParams.key = fs.readFileSync(httpsAgentParams.key_file);
-        if (httpsAgentParams.ca_file) httpsAgentParams.ca = fs.readFileSync(httpsAgentParams.ca_file);
-        if (httpsAgentParams.cert_file) httpsAgentParams.cert = fs.readFileSync(httpsAgentParams.cert_file);
-        if (httpsAgentParams.pfx_file) httpsAgentParams.pfx = fs.readFileSync(httpsAgentParams.pfx_file);
+        const httpsAgentOptions = values.httpsAgent;
+        if (httpsAgentOptions.key_file) httpsAgentOptions.key = fs.readFileSync(httpsAgentOptions.key_file);
+        if (httpsAgentOptions.ca_file) httpsAgentOptions.ca = fs.readFileSync(httpsAgentOptions.ca_file);
+        if (httpsAgentOptions.cert_file) httpsAgentOptions.cert = fs.readFileSync(httpsAgentOptions.cert_file);
+        if (httpsAgentOptions.pfx_file) httpsAgentOptions.pfx = fs.readFileSync(httpsAgentOptions.pfx_file);
 
-        const httpsAgentOptions = {
-          servername: httpsAgentParams.servername,
-          passphrase: httpsAgentParams.passphrase,
-          ca: httpsAgentParams.ca,
-          cert: httpsAgentParams.cert,
-          key: httpsAgentParams.key,
-          pfx: httpsAgentParams.pfx,
-          maxCachedSessions: httpsAgentParams.maxCachedSessions,
-          withCredentials: httpsAgentParams.withCredentials
-        };
         httpParams.httpsAgent = new https.Agent(httpsAgentOptions);
       } catch (err) {
         this.endOptions.end = 'error';
